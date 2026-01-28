@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/BL/" />
+  <Folder Name="/DA/" />
+  <Folder Name="/Models/" />
+  <Folder Name="/SI/" />
+  <Project Path="JrJobFinder.API/JrJobFinder.API.csproj" />
+</Solution>
