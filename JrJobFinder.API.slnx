@@ -1,7 +1,14 @@
 <Solution>
-  <Folder Name="/BL/" />
-  <Folder Name="/DA/" />
-  <Folder Name="/Models/" />
-  <Folder Name="/SI/" />
-  <Project Path="JrJobFinder.API/JrJobFinder.API.csproj" />
+  <Folder Name="/BL/">
+    <Project Path="JobOffers.BL/JrJobFinder.BL.csproj" Id="0f2c008b-1b2b-45d9-93f6-ddc97ca2df55" />
+  </Folder>
+  <Folder Name="/DA/">
+    <Project Path="DbContext/JrJobFinder.DA.csproj" Id="b874f035-d4c0-4296-b2f4-926ff6ebbf51" />
+  </Folder>
+  <Folder Name="/Models/">
+    <Project Path="JrJobFinder.Model.JobOffer/JrJobFinder.Models.csproj" />
+  </Folder>
+  <Folder Name="/SI/">
+    <Project Path="JrJobFinder.API/JrJobFinder.SI.csproj" />
+  </Folder>
 </Solution>
