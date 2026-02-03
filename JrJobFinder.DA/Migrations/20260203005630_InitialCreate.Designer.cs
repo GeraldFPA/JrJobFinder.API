@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JrJobFinder.DA.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260130060258_InitialCreate")]
+    [Migration("20260203005630_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
