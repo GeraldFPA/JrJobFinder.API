@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace JrJobFinder.API.Controllers
+namespace JrJobFinder.SI.Controllers
 {
     [ApiController]
     [Route("[controller]")]

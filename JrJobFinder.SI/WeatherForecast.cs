@@ -1,4 +1,4 @@
-namespace JrJobFinder.API
+namespace JrJobFinder.SI
 {
     public class WeatherForecast
     {
