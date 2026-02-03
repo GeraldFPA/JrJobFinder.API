@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\JrJobFinder.DA\JrJobFinder.DA.csproj" />
+    <ProjectReference Include="..\JrJobFinder.Models\JrJobFinder.Models.csproj" />
+  </ItemGroup>
+
 </Project>
