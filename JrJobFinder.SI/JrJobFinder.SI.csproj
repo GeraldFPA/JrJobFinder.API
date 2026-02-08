@@ -16,7 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\JrJobFinder.BL\JrJobFinder.BL.csproj" />
     <ProjectReference Include="..\JrJobFinder.DA\JrJobFinder.DA.csproj" />
+    <ProjectReference Include="..\JrJobFinder.Models\JrJobFinder.Models.csproj" />
   </ItemGroup>
 
 </Project>
