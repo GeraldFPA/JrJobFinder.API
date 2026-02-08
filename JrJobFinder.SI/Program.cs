@@ -30,12 +30,12 @@ using (var scope = app.Services.CreateScope())
         {
             Title = "Junior Software Developer",
             Company = "Tech Corp",
-            technologies = "C#, .NET, SQL",
-            experienceLevel = "Junior",
+            Technologies = "C#, .NET, SQL",
+            ExperienceLevel = "Junior",
             Location = "Costa Rica",
             IsRemote = true,
-            source = "LinkedIn",
-            sourceUrl = "https://example.com/job",
+            Source = "LinkedIn",
+            SourceUrl = "https://example.com/job",
             PostedDate = DateTime.UtcNow
         });
 

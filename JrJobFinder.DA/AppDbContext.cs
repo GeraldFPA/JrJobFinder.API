@@ -19,9 +19,9 @@ namespace JrJobFinder.DA
                 entity.Property(e => e.Title).IsRequired().HasMaxLength(150);
                 entity.Property(e => e.Company).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.PostedDate).IsRequired();
-                entity.Property(e => e.experienceLevel).HasMaxLength(50);
-                entity.Property(e => e.technologies).HasMaxLength(200);
-                entity.Property(e => e.sourceUrl).HasMaxLength(300);
+                entity.Property(e => e.ExperienceLevel).HasMaxLength(50);
+                entity.Property(e => e.Technologies).HasMaxLength(200);
+                entity.Property(e => e.SourceUrl).HasMaxLength(300);
             });
         }
 

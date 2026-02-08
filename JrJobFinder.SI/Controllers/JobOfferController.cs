@@ -1,82 +1,68 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using JrJobFinder.BL;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace JrJobFinder.SI.Controllers
 {
-    public class JobOfferController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class JobOfferController : ControllerBase
     {
-        private readonly IJobOfferBL OfferManager;
-        public JobOfferController(IJobOfferBL offerManager)
+        private readonly BL.IJobOfferBL _offerManager;
+        private readonly ILogger<JobOfferController> _logger;
+        public JobOfferController(BL.IJobOfferBL offerManager, ILogger<JobOfferController> logger)
         {
-            OfferManager = offerManager;
+            _offerManager = offerManager;
+            _logger = logger;
         }
-        [HttpGet("/api/JobOffers")]
-        public IQueryable GetAllJobOffers()
-        {
-            return OfferManager.GetAllJobOffers();
-        }
-
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        [HttpGet]
+        public async Task<IActionResult> GetAllJobOffers(
+            [FromQuery] string? technology,
+            [FromQuery] bool? isRemote,
+            [FromQuery] string? level,
+            [FromQuery] string? location,
+            CancellationToken cancellationToken
+            )
         {
             try
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+                _logger.LogInformation(
+                    "Received request to get job offers with filters - " +
+                    "Technology: {Technology}, IsRemote: {IsRemote}, Level: {Level}, Location: {Location}",
+                    technology, isRemote, level, location);
 
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+                var jobOffers = await _offerManager.GetAllJobOffers(technology, isRemote, level, location, cancellationToken);
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
+                return Ok(jobOffers);
             }
-            catch
+            catch (OperationCanceledException)
             {
-                return View();
+                return StatusCode(499, "Request was cancelled by the client.");
             }
-        }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while retrieving job offers: {ex.Message}");
+            }
+            
+         }
 
-        public ActionResult Delete(int id)
+        [HttpGet("{id}")]
+        public string Get(int id)
         {
-            return View();
+            return "value";
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public void Post([FromBody] string value)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+        }
+
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
+        {
+        }
+
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
         }
     }
 }
