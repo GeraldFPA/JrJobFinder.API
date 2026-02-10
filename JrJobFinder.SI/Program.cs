@@ -1,6 +1,6 @@
-using JrJobFinder.BL;
+using JrJobFinder.BL.Interfaces;
+using JrJobFinder.BL.Services;
 using JrJobFinder.DA;
-using JrJobFinder.Models;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,31 +17,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
-
-//Recordar borrar esta sección una vez se haya probado la aplicación
-
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-    if (!context.JobOffers.Any())
-    {
-        context.JobOffers.Add(new JobOffer
-        {
-            Title = "Junior Software Developer",
-            Company = "Tech Corp",
-            Technologies = "C#, .NET, SQL",
-            ExperienceLevel = "Junior",
-            Location = "Costa Rica",
-            IsRemote = true,
-            Source = "LinkedIn",
-            SourceUrl = "https://example.com/job",
-            PostedDate = DateTime.UtcNow
-        });
-
-        context.SaveChanges();
-    }
-}//////////
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

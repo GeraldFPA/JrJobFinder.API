@@ -1,4 +1,4 @@
-﻿using JrJobFinder.Models;
+﻿using JrJobFinder.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace JrJobFinder.DA

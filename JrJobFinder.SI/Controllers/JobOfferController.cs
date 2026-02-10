@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using JrJobFinder.Models.Entities;
+using JrJobFinder.Models.DTOs;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using JrJobFinder.BL.Interfaces;
 
 namespace JrJobFinder.SI.Controllers
 {
@@ -6,9 +10,9 @@ namespace JrJobFinder.SI.Controllers
     [ApiController]
     public class JobOfferController : ControllerBase
     {
-        private readonly BL.IJobOfferBL _offerManager;
+        private readonly IJobOfferBL _offerManager;
         private readonly ILogger<JobOfferController> _logger;
-        public JobOfferController(BL.IJobOfferBL offerManager, ILogger<JobOfferController> logger)
+        public JobOfferController(IJobOfferBL offerManager, ILogger<JobOfferController> logger)
         {
             _offerManager = offerManager;
             _logger = logger;
@@ -29,9 +33,23 @@ namespace JrJobFinder.SI.Controllers
                     "Technology: {Technology}, IsRemote: {IsRemote}, Level: {Level}, Location: {Location}",
                     technology, isRemote, level, location);
 
-                var jobOffers = await _offerManager.GetAllJobOffers(technology, isRemote, level, location, cancellationToken);
+                var jobOffers = await _offerManager.GetAllJobOffers
+                    (technology, isRemote, level, location, cancellationToken);
 
-                return Ok(jobOffers);
+                var result = jobOffers.Select(offer => new ListJobOfferDTO
+                {
+                    Id = offer.Id,
+                    Title = offer.Title,
+                    Company = offer.Company,
+                    Technologies = offer.Technologies,
+                    ExperienceLevel = offer.ExperienceLevel,
+                    Location = offer.Location,
+                    IsRemote = offer.IsRemote,
+                    Source = offer.Source,
+                    PostedDate = offer.PostedDate
+                });
+
+                return Ok(result);
             }
             catch (OperationCanceledException)
             {
@@ -44,25 +62,41 @@ namespace JrJobFinder.SI.Controllers
             
          }
 
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> CreatedJobOffer([FromBody] CreateJobOfferDTO dto)
         {
-        }
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                var jobOffers = new JobOffer
+                {
+                    Title = dto.Title,
+                    Company = dto.Company,
+                    Technologies = dto.Technologies,
+                    ExperienceLevel = dto.ExperienceLevel,
+                    Location = dto.Location ?? "Not specified",
+                    IsRemote = dto.IsRemote,
+                    Source = dto.Source ?? "User submission",
 
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+                };
+                _logger.LogInformation(
+                    "Received request to create a job offer - " +
+                    "Title: {Title}, Company: {Company}, Technologies: {Technologies}, " +
+                    "ExperienceLevel: {ExperienceLevel}, Location: {Location}, IsRemote: {IsRemote}, Source: {Source}",
+                    jobOffers.Title, jobOffers.Company, jobOffers.Technologies,
+                    jobOffers.ExperienceLevel, jobOffers.Location, jobOffers.IsRemote, jobOffers.Source);
 
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+                var createdOffer = await _offerManager.CreateJobOffer(jobOffers);
+
+                return CreatedAtAction(nameof(GetAllJobOffers), new { id = createdOffer.Id }, createdOffer);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while creating the job offer: {ex.Message}");
+            }
         }
     }
 }

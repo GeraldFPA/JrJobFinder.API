@@ -1,4 +1,5 @@
-﻿namespace JrJobFinder.Models
+﻿
+namespace JrJobFinder.Models.Entities
 {
     public class JobOffer
     {
@@ -11,6 +12,6 @@
         public string ExperienceLevel { get; set; }
         public string Technologies { get; set; }
         public string Source { get; set; }
-        public string SourceUrl { get; set; }
+        public string SourceUrl { get; set; } = "Without link";
     }
 }
