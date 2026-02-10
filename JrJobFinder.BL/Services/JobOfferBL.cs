@@ -1,9 +1,11 @@
-﻿namespace JrJobFinder.BL
-{
-    using JrJobFinder.DA;
-    using Microsoft.EntityFrameworkCore;
-    using JrJobFinder.Models;
+﻿using JrJobFinder.DA;
+using Microsoft.EntityFrameworkCore;
+using JrJobFinder.Models.Entities;
+using JrJobFinder.BL.Interfaces;
 
+
+namespace JrJobFinder.BL.Services
+{
     public class JobOfferBL : IJobOfferBL
     {
         private AppDbContext DbContext;
@@ -11,19 +13,19 @@
         {
             DbContext = dbContext;
         }
-        public async Task<List<JobOffer>> GetAllJobOffers(
+        public async Task<IEnumerable<JobOffer>> GetAllJobOffers(
             string? technology,
             bool? isRemote,
-            string? level, 
-            string? location, 
-            CancellationToken cancellationToken= default)
+            string? level,
+            string? location,
+            CancellationToken cancellationToken = default)
         {
             IQueryable<JobOffer> query = DbContext.JobOffers.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(technology))
             {
                 query = query.Where(j =>
-                    EF.Functions.Like(j.Technologies,$"%{technology }%"));
+                    EF.Functions.Like(j.Technologies, $"%{technology}%"));
             }
 
             if (isRemote.HasValue)
@@ -40,9 +42,17 @@
             if (!string.IsNullOrWhiteSpace(location))
             {
                 query = query.Where(j =>
-                    EF.Functions.Like(j.Location,$"%{location}%"));
+                    EF.Functions.Like(j.Location, $"%{location}%"));
             }
             return await query.AsNoTracking().ToListAsync(cancellationToken);
+        }
+        public async Task<JobOffer> CreateJobOffer(JobOffer jobOffer)
+        {
+            jobOffer.PostedDate = DateTime.UtcNow;
+
+            DbContext.JobOffers.Add(jobOffer);
+            await DbContext.SaveChangesAsync();
+            return jobOffer;
         }
     }
 }
